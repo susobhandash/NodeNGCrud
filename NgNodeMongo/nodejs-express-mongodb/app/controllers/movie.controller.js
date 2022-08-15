@@ -62,7 +62,7 @@ exports.findAll = (req, res) => {
         .then((data) => {
             res.send({
                 totalItems: data.totalDocs,
-                tutorials: data.docs,
+                data: data.docs,
                 totalPages: data.totalPages,
                 currentPage: data.page - 1,
             });

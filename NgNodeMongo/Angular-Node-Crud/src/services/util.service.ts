@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const baseUrl = 'http://localhost:8080/api/accounts';
+const baseUrl = 'http://localhost:8080/api/movies';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +11,9 @@ export class UtilService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<any[]> {
-    return this.http.get<any[]>(baseUrl);
+  getAll(param: String): Observable<any[]> {
+    return this.http.get<any[]>(baseUrl+param);
+    // page=1&size=5
   }
   get(id: any): Observable<any> {
     return this.http.get(`${baseUrl}/${id}`);
