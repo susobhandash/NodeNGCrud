@@ -1,5 +1,13 @@
 const db = require("../models");
 const Movies = db.movies;
+const getPagination = (page, size) => {
+    const limit = size ? +size : 20;
+    const offset = page ? page * limit : 0;
+    return {
+        limit,
+        offset
+    };
+};
 
 // Create and Save a new t
 exports.create = (req, res) => {
@@ -30,18 +38,38 @@ exports.create = (req, res) => {
 
 // Retrieve all t from the database.
 exports.findAll = (req, res) => {
-    const title = req.query.title;
-    var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
-  
-    Movies.find(condition)
-        .then(data => {
-            res.send(data);
-            // console.log(data);
-            // res.json(data);
+    const {
+        page,
+        size,
+        title
+    } = req.query;
+    var condition = title ?
+        {
+            title: {
+                $regex: new RegExp(title),
+                $options: "i"
+            }
+        } :
+        {};
+    const {
+        limit,
+        offset
+    } = getPagination(page, size);
+    Movies.paginate(condition, {
+            offset,
+            limit
         })
-        .catch(err => {
+        .then((data) => {
+            res.send({
+                totalItems: data.totalDocs,
+                tutorials: data.docs,
+                totalPages: data.totalPages,
+                currentPage: data.page - 1,
+            });
+        })
+        .catch((err) => {
             res.status(500).send({
-                message: err.message || "Some error occurred while retrieving t."
+                message: err.message || "Some error occurred while retrieving tutorials.",
             });
         });
 };
@@ -96,50 +124,50 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
     Movies.findByIdAndRemove(id)
-      .then(data => {
-        if (!data) {
-          res.status(404).send({
-            message: `Cannot delete t with id=${id}. Maybe t was not found!`
-          });
-        } else {
-          res.send({
-            message: "t was deleted successfully!"
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Could not delete t with id=" + id
+        .then(data => {
+            if (!data) {
+                res.status(404).send({
+                    message: `Cannot delete t with id=${id}. Maybe t was not found!`
+                });
+            } else {
+                res.send({
+                    message: "t was deleted successfully!"
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Could not delete t with id=" + id
+            });
         });
-      });
 };
 
 // Delete all t from the database.
 exports.deleteAll = (req, res) => {
     Movies.deleteMany({})
-    .then(data => {
-      res.send({
-        message: `${data.deletedCount} t were deleted successfully!`
-      });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all t."
-      });
-    });
+        .then(data => {
+            res.send({
+                message: `${data.deletedCount} t were deleted successfully!`
+            });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while removing all t."
+            });
+        });
 };
 
 // Find all published t
 exports.findAllPublished = (req, res) => {
-    Movies.find({ published: true })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving t."
-      });
-    });
+    Movies.find({
+            published: true
+        })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving t."
+            });
+        });
 };
