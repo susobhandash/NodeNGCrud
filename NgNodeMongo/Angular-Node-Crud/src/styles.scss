@@ -24,8 +24,28 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     margin-bottom: 10px;
 }
 
+.ml-10 {
+    margin-left: 10px;
+}
+
+.ht-40 {
+    height: 40px;
+}
+
+.align-center {
+    align-items: center;
+}
+
 .justify-right {
     justify-content: flex-end;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.flex-start {
+    justify-content: flex-start;
 }
 
 .text-right {
@@ -47,6 +67,7 @@ th, td {
 
 .example-card {
     max-width: 300px;
+    width: 300px;
     margin-right: 15px;
     margin-bottom: 15px;
 
@@ -102,4 +123,8 @@ th, td {
     bottom: 0;
     width: 100%;
     border-top: 1px solid gray;
+}
+
+.mat-dialog-title {
+    border-bottom: 1px solid #607d8b;
 }

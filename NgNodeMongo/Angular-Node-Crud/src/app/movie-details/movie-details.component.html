@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>{{data.title}} {{data.year}}</h1>
+<div mat-dialog-content>
+    <div class="movie-details">
+        <div class="mb-10">
+            <span>Languages - Country</span>
+            <p>{{data.languages}} - {{data.countries}}</p>
+        </div>
+        <div class="mb-10">
+            <span>Genres</span>
+            <p>{{data.genres}}</p>
+        </div>
+        <div class="mb-10">
+            <span>Released</span>
+            <p>{{data.released}}</p>
+        </div>
+        <div class="mb-10">
+            <span>Plot</span>
+            <p>{{data.fullplot}}</p>
+        </div>
+        <div class="mb-10">
+            <span>Director/s</span>
+            <p>{{data.directors}}</p>
+        </div>
+        <div class="mb-10">
+            <span>Cast</span>
+            <p>{{data.cast}}</p>
+        </div>
+        <div class="mb-10">
+            <span>Plot</span>
+            <p>{{data.fullplot}}</p>
+        </div>
+    </div>
+    <div class="mb-10">
+        <img [attr.src]="data['poster'] ? data['poster'] : 'https://via.placeholder.com/332x170.png/?text=no+poster+available'"
+            alt="Movie Poster">
+    </div>
+</div>

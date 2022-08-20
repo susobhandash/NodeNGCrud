@@ -1,7 +1,7 @@
 const db = require("../models");
 const Movies = db.movies;
 const getPagination = (page, size) => {
-    const limit = size ? +size : 20;
+    const limit = size ? +size : 25;
     const offset = page ? page * limit : 0;
     return {
         limit,
@@ -41,16 +41,32 @@ exports.findAll = (req, res) => {
     const {
         page,
         size,
-        title
+        title,
+        genres
     } = req.query;
-    var condition = title ?
-        {
+    var condition = {};
+    if (title) {
+        condition = {
             title: {
                 $regex: new RegExp(title),
                 $options: "i"
             }
-        } :
-        {};
+        }
+    }
+    if (genres) {
+        condition['genres'] = {
+            $regex: new RegExp(genres),
+            $options: "i"
+        }
+    }
+    // title ?
+    //     {
+    //         title: {
+    //             $regex: new RegExp(title),
+    //             $options: "i"
+    //         }
+    //     } :
+    //     {};
     const {
         limit,
         offset

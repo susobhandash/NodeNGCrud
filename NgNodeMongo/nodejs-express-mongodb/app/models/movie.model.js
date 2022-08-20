@@ -1,22 +1,10 @@
-// module.exports = mongoose => {
-//     const movies = mongoose.model(
-//       "movies",
-//       mongoose.Schema(
-//         {
-//           name: String,
-//           summary: String,
-//         },
-//       )
-//     );
-//     movies.plugin(mongoosePaginate);
-//     return movies;
-// };
-
 module.exports = (mongoose, mongoosePaginate) => {
   var schema = mongoose.Schema(
     {
-      name: String,
-      summary: String,
+      title: String,
+      plot: String,
+      fullplot: String,
+      genres: Array
     },
   );
   schema.method("toJSON", function() {
@@ -28,14 +16,3 @@ module.exports = (mongoose, mongoosePaginate) => {
   const movies = mongoose.model("movies", schema);
   return movies;
 };
-// const mongoose = require("mongoose");
-// const mongoosePaginate = require("mongoose-paginate-v2");
-// const Schema = mongoose.Schema;
-
-// const movies = new Schema({
-//   name: String,
-//   summary: String,
-// });
-
-// movies.plugin(mongoosePaginate);
-// module.exports = mongoose.model("movies", movies);

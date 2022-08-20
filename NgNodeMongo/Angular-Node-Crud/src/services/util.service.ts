@@ -11,7 +11,7 @@ export class UtilService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(param: String): Observable<any[]> {
+  getAll(param: any): Observable<any[]> {
     return this.http.get<any[]>(baseUrl+param);
     // page=1&size=5
   }
@@ -30,7 +30,7 @@ export class UtilService {
   deleteAll(): Observable<any> {
     return this.http.delete(baseUrl);
   }
-  findByTitle(title: any): Observable<any[]> {
+  findByTitle(title: string): Observable<any[]> {
     return this.http.get<any[]>(`${baseUrl}?title=${title}`);
   }
 }

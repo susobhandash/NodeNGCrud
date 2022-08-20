@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UtilService } from 'src/services/util.service';
 import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { MovieDetailsComponent } from '../movie-details/movie-details.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-movies-view',
@@ -13,7 +16,13 @@ export class MoviesViewComponent implements OnInit {
   pageSize = 25;
   pageIndex = 0;
   currentPage = 0;
-  pageSizeOptions: number[] = [5, 10, 25, 100];
+  pageSizeOptions: number[] = [5, 10, 25, 50, 100];
+  value = '';
+
+  selectedGenre = new FormControl('');
+
+  genreList: string[] = ['Action', 'Adventure', 'Animation', 'Biography', 'Comedy', 'Crime', 'Drama', 'Documentary', 'Family', 'Fantasy', 'History', 'Horror', 'Music',
+  'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Short', 'Sport', 'Thriller', 'War', 'Western'];
 
   records = [];
   pageEvent: PageEvent = {
@@ -30,6 +39,7 @@ export class MoviesViewComponent implements OnInit {
       header: 'Title',
       type: 'string',
       width: 180,
+      keyCol: true,
       cell: (element: any) => `${element.title}`,
     },
     {
@@ -101,6 +111,7 @@ export class MoviesViewComponent implements OnInit {
 
   constructor(
     private util: UtilService,
+    public dialog: MatDialog
   ) {
     this.getAllRecords();
   }
@@ -109,13 +120,31 @@ export class MoviesViewComponent implements OnInit {
     this.displayedColumns = this.columns.map(c => c.columnDef);
   }
 
-  getAllRecords() {
-    this.util.getAll('?page='+ this.pageIndex +'&size='+ this.pageSize).subscribe((res: any) => {
+  getAllRecords(resetPagination = false) {
+    if (resetPagination) {
+      this.pageIndex = 0;
+      this.pageSize = 25;
+    }
+
+    let opts = '?page='+ this.pageIndex +'&size='+ this.pageSize;
+
+    if (this.selectedGenre && this.selectedGenre.value) {
+      opts = opts + '&genres=' + this.selectedGenre.value
+    }
+    if (this.value) {
+      opts = opts + '&title=' + this.value;
+    }
+
+    this.util.getAll(opts).subscribe((res: any) => {
       console.log(res);
       if (res) {
         this.currentPage = res.currentPage;
         this.length = res.totalItems;
         this.records = res['data'];
+        
+        this.records.forEach(rec => {
+          console.log(rec['genres'])
+        });
       }
     });
   }
@@ -131,6 +160,15 @@ export class MoviesViewComponent implements OnInit {
     this.pageIndex = this.pageEvent.pageIndex;
     this.pageSize = this.pageEvent.pageSize;
     this.getAllRecords();
+  }
+
+  openDialog(movie: any) {
+    this.dialog.open(MovieDetailsComponent, {
+      data: movie,
+      width: '50vw',
+      maxWidth: '80vw',
+      minWidth: '380px'
+    });
   }
 
 }
